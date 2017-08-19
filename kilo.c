@@ -422,14 +422,27 @@ void editorFindCallback(char *query, int key) {
 			E.cx = editorRowRxToCx(row, match - row->render);
 			E.rowoff = E.numrows;
 			break;
-		}
+		}  
 	}
 }
+
 void editorFind() {
-	char *query = editorPrompt("Search: % (ESC to cancel)", editorFindCallback);
+	/*save cursor position before search*/
+	int saved_cx = E.cx;
+	int saved_cy = E.cy;
+	int saved_coloff = E.coloff;
+	int saved_rowoff = E.rowoff;
+
+	char *query = editorPrompt("Search: %s (ESC to cancel)", editorFindCallback);
 
 	if (query) {
 		free(query);
+	} else {
+		/*restore cursor position after search*/
+		E.cx = saved_cx;
+		E.cy = saved_cy;
+		E.coloff = saved_coloff;
+		E.rowoff = saved_rowoff;
 	}
 }
 
